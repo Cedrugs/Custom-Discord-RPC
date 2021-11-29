@@ -1,6 +1,6 @@
 from pypresence import Presence
 from configparser import ConfigParser
-from time import sleep
+from time import sleep, time
 
 
 import logging
@@ -47,8 +47,12 @@ class Validate:
         for item in kwargs_keyword:
             if len((parser.get('Input', item))) > 1:
                 self.result.update({f"{kwargs_keyword[item]}": f"{parser.get('Input', item)}"})
+        if 'start' in list(self.result.keys()):
+            if str(self.result['start']).lower() == 'default':
+                self.result['start'] = int(time())
         if 'buttons' in list(self.result.keys()):
             self.result['buttons'] = format_button(self.result['buttons'])
+        print(self.result)
         Run(client_id=client_id, connected=self.connected, **self.result)
 
 
