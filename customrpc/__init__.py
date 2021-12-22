@@ -1,14 +1,13 @@
 from pypresence import Presence
 from configparser import ConfigParser
 from time import sleep, time
-
+from utils import get_key
+from colorama import Fore
 
 import logging
 
-
 log = logging.getLogger(__name__)
-rpc = None
-
+rpc: Presence = None
 
 kwargs_keyword = {
     "State": "state",
@@ -52,7 +51,6 @@ class Validate:
                 self.result['start'] = int(time())
         if 'buttons' in list(self.result.keys()):
             self.result['buttons'] = format_button(self.result['buttons'])
-        print(self.result)
         Run(client_id=client_id, connected=self.connected, **self.result)
 
 
@@ -68,6 +66,9 @@ class Run:
         if not self.connected:
             global rpc
             rpc = Presence(str(self.client))
+            print(Fore.LIGHTGREEN_EX + 'Input Data:')
+            for x in self.kwargs:
+                print(Fore.LIGHTGREEN_EX + get_key(x, kwargs_keyword), self.kwargs[x], sep=" : ")
             log.info('Connecting to discord API..')
             rpc.connect()
             log.info('Connected to discord API')
